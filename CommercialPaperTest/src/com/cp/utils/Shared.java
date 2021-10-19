@@ -888,7 +888,7 @@ public class Shared implements Constants {
         Service.setConfigPath(configPath);
         return new Service(Service.getSessionId());
     }
-    public static Service initializeService(String configPath,String cabinetName,String userName, String passWord){
+    public static Service initializeService(String configPath, String userName, String passWord){
         Service.setConfigPath(configPath);
         return new Service(Service.getSessionId(userName,passWord));
     }
