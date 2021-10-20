@@ -899,7 +899,8 @@ public class Shared implements Constants {
         String wiName = getDataByCoordinates(new DbConnect(ifr,Query.getBidWiNameForTermination(getCpTermCusId(ifr))).getData(),0,0) ;
         String column = "terminateflag";
         String condition = "winame = '"+wiName+"'";
-        service.completeWorkItem(wiName,externalTable,column,flag,condition);
+        String value = "'Y'";
+        service.completeWorkItem(wiName,externalTable,column,value,condition);
         service.disconnectCabinet();
     }
 }
