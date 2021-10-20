@@ -350,7 +350,7 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
             String maturityDate = result.get(5);
             String status = result.get(6);
             String winId = result.get(7);
-            String dtm = getFormattedString(getDaysToMaturity(maturityDate));
+            String dtm = getFormattedString(Calculator.getDaysToMaturity(maturityDate));
             setTableGridData(ifr,cpTermMandateTbl,new String[]{cpTermMandateDateCol,cpTermMandateRefNoCol,cpTermMandateAmountCol,cpTermMandateAcctNoCol,cpTermMandateCustNameCol,cpTermMandateDtmCol,cpTermMandateStatusCol,cpTermMandateWinRefCol},
                     new String [] {date,custId,amount,accountNo,accountName,dtm,status,winId});
         }

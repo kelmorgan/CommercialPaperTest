@@ -187,5 +187,8 @@ public class Calculator {
     public static long getDaysBetweenTwoDates(String startDate, String endDate){
         return ChronoUnit.DAYS.between(LocalDate.parse(startDate),LocalDate.parse(endDate));
     }
+    public static long getDaysToMaturity(String maturityDate){
+        return ChronoUnit.DAYS.between(LocalDate.now(),LocalDate.parse(maturityDate));
+    }
 
 }

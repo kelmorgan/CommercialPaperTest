@@ -876,7 +876,7 @@ public class Shared implements Constants {
             routeFullTerminatedBids(ifr,initializeService(configPath));
         }
         else if (isCpTerminateType(ifr,cpTerminationTypePartial)){
-            new DbConnect(ifr,Query.getCpPartialTerminateBid(getCpCustomerId(ifr),getCpAdjustedPrincipal(ifr))).saveQuery();
+            new DbConnect(ifr,Query.getCpPartialTerminateBid(getCpTermCusId(ifr),getCpAdjustedPrincipal(ifr))).saveQuery();
         }
     }
 
