@@ -177,17 +177,17 @@ public class BranchVerifier extends Shared implements IFormServerEventHandler , 
         clearFields(ifr,new String[]{cpRemarksLocal,cpDecisionLocal});
         setVisible(ifr,cpMarketSection);
         clearCpFlag(ifr);
-        if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)) {
-            if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryBid)) {
+        if (isCpPrimaryMarket(ifr)) {
+            if (isCpCategoryType(ifr,cpCategoryBid)) {
                 setDecision(ifr,cpDecisionLocal,new String[]{decApprove,decReturnLabel}, new String[]{decApprove,decReturn});
                 setDropDown(ifr,cpPmReqTypeLocal,new String[]{cpPmReqFreshLabel},new String[]{cpPmReqFreshValue});
                 setFields(ifr,cpPmReqTypeLocal,cpPmReqFreshValue);
-                setVisible(ifr,new String[]{cpWindowDetailsSection,cpBranchPriSection,cpCustomerDetailsSection,cpPostSection,cpDecisionSection,landMsgLabelLocal});
+                setVisible(ifr,new String[]{cpWindowDetailsSection,cpBranchPriSection,cpCustomerDetailsSection,cpPostSection,cpDecisionSection,landMsgLabelLocal,cpCustomerIdLocal});
                 setInvisible(ifr, new String[]{cpAcctValidateBtn});
                 enableFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal,cpTokenLocal});
                 setMandatory(ifr,new String[]{cpDecisionLocal,cpRemarksLocal,cpTokenLocal});
             }
-            else if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryMandate)){
+            else if (isCpCategoryType(ifr,cpCategoryMandate)){
                 setVisible(ifr,new String[]{cpDecisionSection});
                 setMandatory(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
                 enableFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
@@ -206,8 +206,8 @@ public class BranchVerifier extends Shared implements IFormServerEventHandler , 
                 }
             }
         }
-        else if (getCpMarket(ifr).equalsIgnoreCase(cpSecondaryMarket)){
-            if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryBid)){
+        else if (isCpSecondaryMarket(ifr)){
+            if (isCpCategoryType(ifr,cpCategoryBid)){
                 cpSmShowInvestment(ifr);
                 setDecision(ifr,cpDecisionLocal,new String[]{decApprove,decReturnLabel}, new String[]{decApprove,decReturn});
                 setVisible(ifr,new String[]{cpSmTenorLocal,cpSmRateLocal,cpWindowDetailsSection,cpCustomerIdLocal,cpBranchSecSection,cpCustomerDetailsSection,cpDecisionSection,landMsgLabelLocal,
@@ -223,21 +223,21 @@ public class BranchVerifier extends Shared implements IFormServerEventHandler , 
                     setFields(ifr,new String[]{cpCommissionLocal,cpTxnFeeLocal,cpVatLocal,cpCustodyFeeLocal},new String[]{LoadProp.commission,LoadProp.txnFee,LoadProp.vat,LoadProp.custodyFee});
                 }
             }
-            else if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryMandate)){
+            else if (isCpCategoryType(ifr,cpCategoryMandate)){
                 setVisible(ifr,new String[]{cpDecisionSection});
                 setMandatory(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
                 enableFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
                 cpSetDecision(ifr);
-                if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeTerminate)){
+                if (isCpMandateType(ifr,cpMandateTypeTerminate)){
                     setVisible(ifr,new String[]{cpTerminationSection,cpTermMandateTbl,cpTermSpecialRateLocal, getCpTermIsSpecialRate(ifr) ? cpTermSpecialRateValueLocal : cpTermSpecialRateLocal});
                     if (getCpTerminationType(ifr).equalsIgnoreCase(cpTerminationTypeFull)){
                         setVisible(ifr,new String[]{cpTermAmountDueLocal});
                     }
-                    else if (getCpTerminationType(ifr).equalsIgnoreCase(cpTerminationTypePartial)){
+                    else if (isCpTerminateType(ifr,cpTerminationTypePartial)){
                         setVisible(ifr,new String[]{cpTermAmountDueLocal,cpTermAdjustedPrincipalLocal,cpTermPartialOptionLocal,cpTermPartialAmountLocal,cpTermPartialOptionLocal});
                     }
                 }
-                else if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeLien)){
+                else if (isCpMandateType(ifr,cpMandateTypeLien)){
                     setVisible(ifr,new String[]{cpLienSection});
                 }
             }
