@@ -268,7 +268,7 @@ public class Shared implements Constants {
     public String cpSetupPrimaryMarketWindow(IFormReference ifr){
         String winRefNo =  generateCpWinRefNo(cpPmLabel);
           validate = new DbConnect(ifr,new Query().getSetupMarketWindowQuery(winRefNo,getWorkItemNumber(ifr),commercialProcessName,getCpMarket(ifr),getCpLandingMsg(ifr),getPmMinPrincipal(ifr),getCpPmIssuerName(ifr),getCpOpenDate(ifr),getCpCloseDate(ifr))).saveQuery();
-       if (validate > 0) {
+       if (isSaved(validate)) {
            setFields(ifr,new String[]{cpWinRefNoLocal,windowSetupFlagLocal},new String[]{winRefNo,flag});
            disableFields(ifr, new String[]{cpTreasuryPriSection,cpCutOffTimeSection,cpMarketSection,cpSetupSection});
             message = "Window for Commercial Paper primary market has been setup, bidding can commence. <br> Cut-Off time: "+getCpCloseDate(ifr)+".";
