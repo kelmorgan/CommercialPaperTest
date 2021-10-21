@@ -946,9 +946,12 @@ public class Shared implements Constants {
         disableFields(ifr, new String[]{cpTerminationTypeLocal});
         setFields(ifr,cpTermCustIdLocal,custId);
 
-        String checkBid = cpCheckExistingTerminationBids(ifr);
 
-        if (!(isEmpty(checkBid) && isCurrWs(ifr,branchException))) return checkBid;
+
+        if (!isCurrWs(ifr,branchException)) {
+            String checkBid = cpCheckExistingTerminationBids(ifr);
+            if (isNotEmpty(checkBid)) return checkBid;
+        }
 
 
         if (isCpLien(ifr,custId)) return cpLienErrMsg;
