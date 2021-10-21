@@ -126,7 +126,7 @@ public class Query {
     }
 
     public static String getBidForTerminationQuery(String process, String marketType, String data){
-        return "SELECT reqdate,custrefid,custprincipal,custacctno,custname,maturitydate,status,winrefid,adjustedprincipal,partialterminatedflag FROM MM_BID_TBL where process = '"+process+"' and markettype = '"+marketType+"' and terminateflag = 'N' and maturedflag = 'N' and  awaitingmaturityflag = 'Y' and (custrefid = '"+data+"' or custacctno = '"+data+"' )";
+        return "SELECT reqdate,custrefid,custprincipal,custacctno,custname,maturitydate,status,winrefid,adjustedprincipal,partialterminateflag FROM MM_BID_TBL where process = '"+process+"' and markettype = '"+marketType+"' and terminateflag = 'N' and maturedflag = 'N' and  awaitingmaturityflag = 'Y' and (custrefid = '"+data+"' or custacctno = '"+data+"' )";
     }
     public static String getBidForTerminationQuery(String id){
         return "SELECT reqdate,custrefid,custprincipal,custacctno,custname,maturitydate,status,winrefid FROM MM_BID_TBL where custrefid = '"+id+"'";
