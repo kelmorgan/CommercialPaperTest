@@ -997,7 +997,7 @@ public class Shared implements Constants {
     private static String cpCheckExistingTerminationBids(IFormReference ifr){
         resultSet = new DbConnect(ifr,Query.getCpExistingTermBids(getCpTermCusId(ifr))).getData();
 
-        if (!isEmpty(resultSet)) return  "Termination Request for the Commercial paper Customer Id : "+getCpTermCusId(ifr)+" already exist and in progress. WorkItem : "+getDataByCoordinates(resultSet,0,0)+" WorkStep: "+getDataByCoordinates(resultSet,0,1)+"";
+        if (isNotEmpty(resultSet)) return  "Termination Request for the Commercial paper Customer Id : "+getCpTermCusId(ifr)+" already exists and in progress. WorkItem : "+getDataByCoordinates(resultSet,0,0)+",  WorkStep: "+getDataByCoordinates(resultSet,0,1)+"";
 
         return empty;
     }
