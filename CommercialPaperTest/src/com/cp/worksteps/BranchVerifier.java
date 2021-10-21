@@ -193,12 +193,12 @@ public class BranchVerifier extends Shared implements IFormServerEventHandler , 
                 enableFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
                 cpSetDecision(ifr);
                 if (isCpMandateType(ifr,cpMandateTypeTerminate)){
-                    setVisible(ifr,new String[]{cpTerminationTypeLocal,cpTerminationSection,cpTermMandateTbl,cpTermSpecialRateLocal, getCpTermIsSpecialRate(ifr) ? cpTermSpecialRateValueLocal : cpTermSpecialRateLocal});
+                    setVisible(ifr,new String[]{cpTermRateLocal,cpTerminationTypeLocal,cpTerminationSection,cpTermMandateTbl,cpTermSpecialRateLocal, getCpTermIsSpecialRate(ifr) ? cpTermSpecialRateValueLocal : cpTermSpecialRateLocal});
                     if (isCpTerminateType(ifr,cpTerminationTypeFull)){
                         setVisible(ifr,new String[]{cpTermAmountDueLocal});
                     }
                     else if (isCpTerminateType(ifr,cpTerminationTypePartial)){
-                        setVisible(ifr,new String[]{cpTermAmountDueLocal,cpTermAdjustedPrincipalLocal,cpTermPartialOptionLocal,cpTermPartialAmountLocal,cpTermPartialOptionLocal});
+                        setVisible(ifr,new String[]{cpTermAmountDueLocal,cpTermAdjustedPrincipalLocal,cpTermPartialOptionLocal,cpTermPartialAmountLocal});
                     }
                 }
                 else if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeLien)){

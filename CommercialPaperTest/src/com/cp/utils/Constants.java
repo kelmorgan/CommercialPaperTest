@@ -379,6 +379,7 @@ public interface Constants {
 	String principalNotInThousandMsg = "Principal must be in thousands";
 	String cpSmInvestmentTypePrincipal ="Principal";
 	String cpSmInvestmentTypePrincipalInterest="PrincipalInterest";
+	String cpSearchTermErrMsg = "No mandate/s to display for your search criteria. Try again with another.";
 
 	//eventName/controlName
 	String formLoad = "formLoad";

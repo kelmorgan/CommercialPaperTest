@@ -56,8 +56,7 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
                         case cpSmApplyEvent:{cpSmInvestmentApply(ifr,Integer.parseInt(data));}
                         break;
                         case  cpSearchTermMandateEvent: {
-                            cpFetchMandatesForTermination(ifr,getCpMarket(ifr));
-                            break;
+                          return  cpFetchMandatesForTermination(ifr,getCpMarket(ifr));
                         }
                         case cpSelectTermMandateEvent:{
                             return cpSelectMandateForTermination(ifr,Integer.parseInt(data));
@@ -215,15 +214,15 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
 
     @Override
     public void cpSendMail(IFormReference ifr) {
-        if (getCpDecision(ifr).equalsIgnoreCase(decSubmit)) {
-            if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryBid)) {
+        if (isCpDecisionSubmit(ifr)) {
+            if (isCpCategoryType(ifr,cpCategoryBid)) {
                     message = "A request for Commercial paper (" + getCpMarket(ifr) + " market) with Workitem No. " + getWorkItemNumber(ifr) + " has been initiated and is now pending in your queue for approval.";
                     new MailSetup(ifr, getWorkItemNumber(ifr), getUsersMailsInGroup(ifr, groupName), empty, mailSubject, message);
-            } else if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryMandate)) {
-                if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeTerminate)) {
+            } else if (isCpCategoryType(ifr,cpCategoryMandate)) {
+                if (isCpMandateType(ifr,cpMandateTypeTerminate)) {
                     message = "A request for Commercial Paper with WorkItem No. " + getWorkItemNumber(ifr) + " termination request was initiated and is now pending in your queue for approval";
                     new MailSetup(ifr, getWorkItemNumber(ifr), getUsersMailsInGroup(ifr, groupName), empty, mailSubject, message);
-                } else if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeLien)) {
+                } else if (isCpMandateType(ifr,cpMandateTypeLien)) {
                     message = "A request to " + getCpLienType(ifr) + " lien on " + getCpMarket(ifr) + " market Commercial paper with WorkItem No. " + getWorkItemNumber(ifr) + " has been initiated and request is now pending in your queue for approval.";
                     new MailSetup(ifr, getWorkItemNumber(ifr), getUsersMailsInGroup(ifr, groupName), empty, mailSubject, message);
                 }
@@ -262,7 +261,7 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
         disableField(ifr,cpCategoryLocal);
             if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryBid)) {
                 if (isCpWindowActive(ifr)) {
-                    if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)) {
+                    if (isCpPrimaryMarket(ifr)) {
 
                         setVisible(ifr, new String[]{cpWindowDetailsSection,cpBranchPriSection,cpPmIssuerSection, cpCustomerDetailsSection,cpServiceSection, landMsgLabelLocal,cpChargesSection,cpCustomerIdLocal});
                         setMandatory(ifr, new String[]{cpCustomerAcctNoLocal, cpPmTenorLocal, cpPmPrincipalLocal, cpPmRateTypeLocal});
@@ -277,7 +276,7 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
                         }
                         setCpPmWindowDetails(ifr);
                     }
-                    else if (getCpMarket(ifr).equalsIgnoreCase(cpSecondaryMarket)){
+                    else if (isCpSecondaryMarket(ifr)){
                         setVisible(ifr,new String[]{cpBranchSecSection,landMsgLabelLocal,cpWindowDetailsSection,cpCustomerIdLocal});
                         enableFields(ifr,new String[]{cpApplyBtn, cpSmInvestmentTypeLocal});
                         setMandatory(ifr,new String[]{cpSmInvestmentTypeLocal});
@@ -317,19 +316,19 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
 
 
     private void cpSelectMandateType(IFormReference ifr){
-        if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeTerminate)){
+        if (isCpMandateType(ifr,cpMandateTypeTerminate)){
             setVisible(ifr,new String[]{cpTerminationSection});
             setMandatory(ifr,new String[]{cpTermMandateLocal});
             enableFields(ifr,new String[]{cpTermMandateLocal,cpSearchMandateTermBtn});
             setInvisible(ifr,new String[]{cpProofOfInvestSection,cpLienSection});
         }
-        else if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypePoi)){
+        else if (isCpMandateType(ifr,cpMandateTypePoi)){
             setVisible(ifr,new String[]{cpProofOfInvestSection});
             enableFields(ifr,new String[]{cpPoiSearchBtn,cpPoiMandateLocal});
             setMandatory(ifr,new String[]{cpPoiSearchBtn,cpPoiMandateLocal});
             setInvisible(ifr,new String[]{cpTerminationSection,cpLienSection});
         }
-        else if (getCpMandateType(ifr).equalsIgnoreCase(cpMandateTypeLien)){
+        else if (isCpMandateType(ifr,cpMandateTypeLien)){
             setVisible(ifr,new String[]{cpLienSection});
             enableFields(ifr, new String[]{cpLienTypeLocal, cpLienMandateIdLocal});
             setMandatory(ifr, new String[]{cpLienTypeLocal, cpLienMandateIdLocal});
@@ -337,86 +336,10 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
         }
         else { setInvisible(ifr,new String[]{cpTerminationSection,cpProofOfInvestSection,cpLienSection});}
     }
-    private void cpFetchMandatesForTermination(IFormReference ifr, String marketType){
-        clearTable(ifr,cpTermMandateTbl);
-        resultSet = new DbConnect(ifr,Query.getBidForTerminationQuery(commercialProcessName,marketType,getCpMandateToTerminate(ifr))).getData();
-        logger.info("result set mandates-- "+ resultSet);
-        for (List<String> result : resultSet){
-            String date = result.get(0);
-            String custId = result.get(1);
-            String amount = result.get(2);
-            String accountNo = result.get(3);
-            String accountName = result.get(4);
-            String maturityDate = result.get(5);
-            String status = result.get(6);
-            String winId = result.get(7);
-            String dtm = getFormattedString(Calculator.getDaysToMaturity(maturityDate));
-            setTableGridData(ifr,cpTermMandateTbl,new String[]{cpTermMandateDateCol,cpTermMandateRefNoCol,cpTermMandateAmountCol,cpTermMandateAcctNoCol,cpTermMandateCustNameCol,cpTermMandateDtmCol,cpTermMandateStatusCol,cpTermMandateWinRefCol},
-                    new String [] {date,custId,amount,accountNo,accountName,dtm,status,winId});
-        }
-        setVisible(ifr,new String[]{cpTermMandateTbl,cpSelectMandateTermBtn});
-        enableFields(ifr,new String[]{cpSelectMandateTermBtn});
-    }
-    private String cpSelectMandateForTermination(IFormReference ifr, int rowIndex){
-        String issueDate = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,0);
-        String custId = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,1);
-        String winId = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,7);
-        String dtm = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,5);
-        logger.info("dtm: "+dtm);
-        String rate;
-        String errMsg = "No Re-Discount rate set by Treasury for this bid.Termination cancelled. Contact Treasury Department.";
-        setInvisible(ifr, new String[]{cpTerminationTypeLocal});
-        undoMandatory(ifr, new String[]{cpTerminationTypeLocal});
-        disableFields(ifr, new String[]{cpTerminationTypeLocal});
-        clearFields(ifr,new String[]{cpTermCustIdLocal,cpTerminationTypeLocal,cpTermDtmLocal,cpTermIssueDateLocal,cpTermBoDateLocal});
-
-        if (isCpLien(ifr,custId)) return cpLienErrMsg;
-
-        resultSet = new DbConnect(ifr,Query.getCpReDiscountedRateForTermQuery(winId)).getData();
-
-
-        if (Calculator.getFormattedInteger(dtm) <= 90){
-            rate = resultSet.get(0).get(0);
-            if (!isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRateLess90Local});
-                setFields(ifr, cpReDiscountRateLess90Local,rate);
-            }
-            else return errMsg;
-        }
-        else if (Calculator.getFormattedInteger(dtm) >= 91 && Calculator.getFormattedInteger(dtm) <= 180){
-            rate   = resultSet.get(0).get(1);
-            if (isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate91To180Local});
-                setFields(ifr, cpReDiscountRate91To180Local,rate );
-            }
-            else return errMsg;
-        }
-        else if (Calculator.getFormattedInteger(dtm) >= 181 && Calculator.getFormattedInteger(dtm) <= 270){
-            rate = resultSet.get(0).get(2);
-            if (!isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate181To270Local});
-                setFields(ifr, cpReDiscountRate181To270Local,rate );
-            }
-            else return errMsg;
-        }
-        else if (Calculator.getFormattedInteger(dtm) >= 271 && Calculator.getFormattedInteger(dtm) <= 364){
-            rate = resultSet.get(0).get(3);
-            if (!isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate271To364Local});
-                setFields(ifr, cpReDiscountRate271To364Local, rate);
-            }
-            else return errMsg;
-        }
-        setVisible(ifr, new String[]{cpTerminationTypeLocal});
-        setMandatory(ifr, new String[]{cpTerminationTypeLocal});
-        enableFields(ifr, new String[]{cpTerminationTypeLocal});
-        setFields(ifr,new String[]{cpTermCustIdLocal,cpTermDtmLocal,cpTermIssueDateLocal,cpTermBoDateLocal},new String[]{custId,dtm,issueDate,getCurrentDate()});
-        return null;
-    }
 
     private void cpSelectTermSpecialRate (IFormReference ifr){
         clearFields(ifr,new String[]{cpTermSpecialRateValueLocal});
-        if (getFieldValue(ifr,cpTermSpecialRateLocal).equalsIgnoreCase(True)){
+        if (getCpTermIsSpecialRate(ifr)){
             setVisible(ifr,cpTermSpecialRateValueLocal);
             setMandatory(ifr,cpTermSpecialRateValueLocal);
             enableFields(ifr,cpTermSpecialRateValueLocal);
@@ -480,4 +403,5 @@ public class BranchInitiator extends Shared implements IFormServerEventHandler, 
         }
         return "Error in processing proof of investment. Contact iBPS support.";
     }
+
 }

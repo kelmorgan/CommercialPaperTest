@@ -126,7 +126,7 @@ public class Query {
     }
 
     public static String getBidForTerminationQuery(String process, String marketType, String data){
-        return "SELECT reqdate,custrefid,custprincipal,custacctno,custname,maturitydate,status,winrefid FROM MM_BID_TBL where process = '"+process+"' and markettype = '"+marketType+"' and  awaitingmaturityflag = 'Y' and (custrefid = '"+data+"' or custacctno = '"+data+"' )";
+        return "SELECT reqdate,custrefid,custprincipal,custacctno,custname,maturitydate,status,winrefid,adjustedprincipal,partialterminatedflag FROM MM_BID_TBL where process = '"+process+"' and markettype = '"+marketType+"' and terminatedflag = 'N' and maturedflag = 'N' and  awaitingmaturityflag = 'Y' and (custrefid = '"+data+"' or custacctno = '"+data+"' )";
     }
     public static String getBidForTerminationQuery(String id){
         return "SELECT reqdate,custrefid,custprincipal,custacctno,custname,maturitydate,status,winrefid FROM MM_BID_TBL where custrefid = '"+id+"'";
@@ -213,9 +213,12 @@ public class Query {
                 "where investmentid = '"+investmentId+"'";
     }
     public static String getCpTerminateBid(String id){
-        return "update mm_bid_tbl set terminateflag = 'Y' where custrefid = '"+id+"'";
+        return "update mm_bid_tbl set terminateflag = 'Y', status = 'Terminated' where custrefid = '"+id+"'";
     }
     public static String getCpPartialTerminateBid(String id,String adjustedPrincipal){
         return "update mm_bid_tbl set adjustedprincipal = "+adjustedPrincipal+", partialterminateflag = 'Y' where custrefid = '"+id+"'";
+    }
+    public  static String getCpExistingTermBids(String id){
+        return "select winame , g_currws from moneymarket_ext where cp_termcustid = '"+id+"' and cp_mandatetype = 'Termination' and g_currws not in ('Exit','Discard','Terminated') order by winame desc";
     }
 }

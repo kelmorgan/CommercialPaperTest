@@ -317,81 +317,8 @@ public class BranchException extends Shared implements IFormServerEventHandler ,
         }
         else { setInvisible(ifr,new String[]{cpTerminationSection,cpProofOfInvestSection,cpLienSection});}
     }
-    private void cpFetchMandatesForTermination(IFormReference ifr, String marketType){
-        clearTable(ifr,cpTermMandateTbl);
-        resultSet = new DbConnect(ifr,Query.getBidForTerminationQuery(commercialProcessName,marketType,getCpMandateToTerminate(ifr))).getData();
-        logger.info("result set mandates-- "+ resultSet);
-        for (List<String> result : resultSet){
-            String date = result.get(0);
-            String custId = result.get(1);
-            String amount = result.get(2);
-            String accountNo = result.get(3);
-            String accountName = result.get(4);
-            String maturityDate = result.get(5);
-            String status = result.get(6);
-            String winId = result.get(7);
-            String dtm = String.valueOf(getDaysToMaturity(maturityDate));
-            setTableGridData(ifr,cpTermMandateTbl,new String[]{cpTermMandateDateCol,cpTermMandateRefNoCol,cpTermMandateAmountCol,cpTermMandateAcctNoCol,cpTermMandateCustNameCol,cpTermMandateDtmCol,cpTermMandateStatusCol,cpTermMandateWinRefCol},
-                    new String [] {date,custId,amount,accountNo,accountName,dtm,status,winId});
-        }
-        setVisible(ifr,new String[]{cpTermMandateTbl,cpSelectMandateTermBtn});
-        enableFields(ifr,new String[]{cpSelectMandateTermBtn});
-    }
-    private String cpSelectMandateForTermination(IFormReference ifr, int rowIndex){
-        String issueDate = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,0);
-        String custId = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,1);
-        String winId = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,7);
-        String dtm = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,5);
-        String rate;
-        String errMsg = "No Re-Discount rate set by Treasury for this bid.Termination cancelled. Contact Treasury Department.";
-        setInvisible(ifr, new String[]{cpTerminationTypeLocal});
-        undoMandatory(ifr, new String[]{cpTerminationTypeLocal});
-        disableFields(ifr, new String[]{cpTerminationTypeLocal});
-        clearFields(ifr,new String[]{cpTermCustIdLocal,cpTerminationTypeLocal,cpTermDtmLocal,cpTermIssueDateLocal,cpTermBoDateLocal});
 
-        if (isCpLien(ifr,custId))
-            return cpLienErrMsg;
 
-        resultSet = new DbConnect(ifr,Query.getCpReDiscountedRateForTermQuery(winId)).getData();
-
-        if (Long.parseLong(dtm) <= 90){
-            rate = resultSet.get(0).get(0);
-            if (!isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRateLess90Local});
-                setFields(ifr, cpReDiscountRateLess90Local,rate);
-            }
-            else  return errMsg;
-        }
-        else if (Long.parseLong(dtm) >= 91 && Long.parseLong(dtm) <= 180){
-            rate   = resultSet.get(0).get(1);
-            if (isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate91To180Local});
-                setFields(ifr, cpReDiscountRate91To180Local,rate );
-            }
-            else return errMsg;
-        }
-        else if (Long.parseLong(dtm) >= 181 && Long.parseLong(dtm) <= 270){
-            rate = resultSet.get(0).get(2);
-            if (!isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate181To270Local});
-                setFields(ifr, cpReDiscountRate181To270Local,rate );
-            }
-            else return errMsg;
-        }
-        else if (Long.parseLong(dtm) >= 271 && Long.parseLong(dtm) <= 364){
-            rate = resultSet.get(0).get(3);
-            if (!isEmpty(rate)) {
-                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate271To364Local});
-                setFields(ifr, cpReDiscountRate271To364Local, rate);
-            }
-            else return errMsg;
-        }
-        setVisible(ifr, new String[]{cpTerminationTypeLocal});
-        setMandatory(ifr, new String[]{cpTerminationTypeLocal});
-        enableFields(ifr, new String[]{cpTerminationTypeLocal});
-        setFields(ifr,new String[]{cpTermCustIdLocal,cpTermDtmLocal,cpTermIssueDateLocal,cpTermBoDateLocal},new String[]{custId,dtm,issueDate,getCurrentDate()});
-        return null;
-    }
 
     private void cpSelectTermSpecialRate (IFormReference ifr){
         clearFields(ifr,new String[]{cpTermSpecialRateValueLocal});

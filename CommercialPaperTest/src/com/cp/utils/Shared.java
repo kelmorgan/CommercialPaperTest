@@ -434,7 +434,7 @@ public class Shared implements Constants {
     public String getCpSmConcessionRateValue(IFormReference ifr){
         return getFieldValue(ifr,cpSmConcessionRateValueLocal);
     }
-    public void clearTable(IFormReference ifr, String tableLocal){
+    public static void  clearTable(IFormReference ifr, String tableLocal){
         ifr.clearTable(tableLocal);
     }
     public static String getCpSmPrincipalBr(IFormReference ifr){
@@ -449,7 +449,7 @@ public class Shared implements Constants {
     public static String getCpMandateType(IFormReference ifr){
         return getFieldValue(ifr,cpMandateTypeLocal);
     }
-    public String getCpMandateToTerminate(IFormReference ifr){
+    public static String getCpMandateToTerminate(IFormReference ifr){
         return getFieldValue(ifr,cpTermMandateLocal);
     }
     public static boolean isCpLien(IFormReference ifr, String id){
@@ -477,7 +477,7 @@ public class Shared implements Constants {
         return  getCpTermSpecialRate(ifr).equalsIgnoreCase(True);
     }
     public static boolean isEmpty(List<List<String>> resultSet){
-        return  resultSet.size() == 0;
+        return  resultSet.isEmpty();
     }
     public static String getCpPartialTermOption(IFormReference ifr){
         return getFieldValue(ifr,cpTermPartialOptionLocal);
@@ -902,5 +902,110 @@ public class Shared implements Constants {
         String value = "'Y'";
         service.completeWorkItem(wiName,externalTable,column,value,condition);
         service.disconnectCabinet();
+    }
+    public static boolean isFlagSet(String flagLocal){
+        return flagLocal.equalsIgnoreCase(flag);
+    }
+    public static String cpFetchMandatesForTermination(IFormReference ifr, String marketType){
+        clearTable(ifr,cpTermMandateTbl);
+        resultSet = new DbConnect(ifr,Query.getBidForTerminationQuery(commercialProcessName,marketType,getCpMandateToTerminate(ifr))).getData();
+        if (isEmpty(resultSet)) return cpSearchTermErrMsg;
+
+        for (List<String> result : resultSet){
+            String date = result.get(0);
+            String custId = result.get(1);
+            String amount = result.get(2);
+            String accountNo = result.get(3);
+            String accountName = result.get(4);
+            String maturityDate = result.get(5);
+            String status = result.get(6);
+            String winId = result.get(7);
+            String adjustedPrincipal = result.get(8);
+            String partialTerminateFlag = result.get(9);
+            String dtm = getFormattedString(Calculator.getDaysToMaturity(maturityDate));
+
+
+            setTableGridData(ifr,cpTermMandateTbl,new String[]{cpTermMandateDateCol,cpTermMandateRefNoCol,cpTermMandateAmountCol,cpTermMandateAcctNoCol,cpTermMandateCustNameCol,cpTermMandateDtmCol,cpTermMandateStatusCol,cpTermMandateWinRefCol},
+                    new String [] {date,custId,isFlagSet(partialTerminateFlag) ? adjustedPrincipal : amount,accountNo,accountName,dtm,status,winId});
+        }
+        setVisible(ifr,new String[]{cpTermMandateTbl,cpSelectMandateTermBtn});
+        enableFields(ifr,new String[]{cpSelectMandateTermBtn});
+        return empty;
+    }
+
+    public static String cpSelectMandateForTermination(IFormReference ifr, int rowIndex){
+        clearFields(ifr,new String[]{cpTermCustIdLocal,cpTerminationTypeLocal,cpTermDtmLocal,cpTermIssueDateLocal,cpTermBoDateLocal});
+        String issueDate = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,0);
+        String custId = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,1);
+        String winId = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,7);
+        String dtm = ifr.getTableCellValue(cpTermMandateTbl,rowIndex,5);
+        String rate;
+        String errMsg = "No Re-Discount rate set by Treasury for this bid.Termination cancelled. Contact Treasury Department.";
+        setInvisible(ifr, new String[]{cpTerminationTypeLocal});
+        undoMandatory(ifr, new String[]{cpTerminationTypeLocal});
+        disableFields(ifr, new String[]{cpTerminationTypeLocal});
+        setFields(ifr,cpTermCustIdLocal,custId);
+
+        String checkBid = cpCheckExistingTerminationBids(ifr);
+
+        if (!(isEmpty(checkBid) && isCurrWs(ifr,branchException))) return checkBid;
+
+
+        if (isCpLien(ifr,custId)) return cpLienErrMsg;
+
+        resultSet = new DbConnect(ifr,Query.getCpReDiscountedRateForTermQuery(winId)).getData();
+
+
+        if (Calculator.getFormattedInteger(dtm) <= 90){
+            rate = resultSet.get(0).get(0);
+            if (!isEmpty(rate)) {
+                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRateLess90Local});
+                setFields(ifr, cpReDiscountRateLess90Local,rate);
+            }
+            else return errMsg;
+        }
+        else if (Calculator.getFormattedInteger(dtm) >= 91 && Calculator.getFormattedInteger(dtm) <= 180){
+            rate   = resultSet.get(0).get(1);
+            if (!isEmpty(rate)) {
+                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate91To180Local});
+                setFields(ifr, cpReDiscountRate91To180Local,rate );
+            }
+            else return errMsg;
+        }
+        else if (Calculator.getFormattedInteger(dtm) >= 181 && Calculator.getFormattedInteger(dtm) <= 270){
+            rate = resultSet.get(0).get(2);
+            if (!isEmpty(rate)) {
+                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate181To270Local});
+                setFields(ifr, cpReDiscountRate181To270Local,rate );
+            }
+            else return errMsg;
+        }
+        else if (Calculator.getFormattedInteger(dtm) >= 271 && Calculator.getFormattedInteger(dtm) <= 364){
+            rate = resultSet.get(0).get(3);
+            if (!isEmpty(rate)) {
+                setVisible(ifr, new String[]{cpReDiscountRateSection, cpReDiscountRate271To364Local});
+                setFields(ifr, cpReDiscountRate271To364Local, rate);
+            }
+            else return errMsg;
+        }
+        setVisible(ifr, new String[]{cpTerminationTypeLocal});
+        setMandatory(ifr, new String[]{cpTerminationTypeLocal});
+        enableFields(ifr, new String[]{cpTerminationTypeLocal});
+        setFields(ifr,new String[]{cpTermCustIdLocal,cpTermDtmLocal,cpTermIssueDateLocal,cpTermBoDateLocal},new String[]{custId,dtm,issueDate,getCurrentDate()});
+        return null;
+    }
+    private static String cpCheckExistingTerminationBids(IFormReference ifr){
+        resultSet = new DbConnect(ifr,Query.getCpExistingTermBids(getCpTermCusId(ifr))).getData();
+
+        if (!isEmpty(resultSet)) return  "Termination Request for the Commercial paper Customer Id : "+getCpTermCusId(ifr)+" already exist and in progress. WorkItem : "+getDataByCoordinates(resultSet,0,0)+" WorkStep: "+getDataByCoordinates(resultSet,0,1)+"";
+
+        return empty;
+    }
+
+    public static boolean isNotEmpty(String value){
+        return !isEmpty(value);
+    }
+    public static boolean isNotEmpty(List<List<String>> resultSet){
+        return !isEmpty(resultSet);
     }
 }
