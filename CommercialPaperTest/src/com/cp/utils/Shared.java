@@ -761,6 +761,7 @@ public class Shared implements Constants {
     }
 
     public void cpCalculateTermination(IFormReference ifr){
+
         try {
             resultSet = new DbConnect(ifr, Query.getCpBidDtlForTerminationQuery(getCpTermCusId(ifr), getCpMarket(ifr))).getData();
 
@@ -780,7 +781,7 @@ public class Shared implements Constants {
                 reDiscountRate = getFieldValue(ifr, cpReDiscountRate271To364Local);
 
 
-            if (getCpTerminationType(ifr).equalsIgnoreCase(cpTerminationTypeFull)) {
+            if (isCpTerminateType(ifr,cpTerminationTypeFull)) {
                 String principal = resultSet.get(0).get(0);
 
                 float amountDue = Calculator.getCpTermAmountDue(principal,reDiscountRate,getCpTermDtm(ifr));
@@ -788,7 +789,7 @@ public class Shared implements Constants {
                 if (isLeapYear) amountDue = Calculator.getCpTermAmountDueForLeapYear(getFormattedString(amountDue),principal,reDiscountRate,getCpTermDtm(ifr));
 
                 setFields(ifr, new String[]{cpTermAmountDueLocal,cpTermRateLocal}, new String[]{getFormattedString(amountDue),reDiscountRate});
-            } else if (getCpTerminationType(ifr).equalsIgnoreCase(cpTerminationTypePartial)) {
+            } else if (isCpTerminateType(ifr,cpTerminationTypePartial)) {
                 if (isLeapYear) {
                     float adjustedPrincipal = Calculator.getCpPartialTermAdjustedPrincipalForLeapYear(getCpTermPartialAmt(ifr),reDiscountRate,getCpTermDtm(ifr));
                     float amountDue = Calculator.getCpPartialTermAmountDueForLeapYear(getFormattedString(adjustedPrincipal),reDiscountRate,getCpTermDtm(ifr));
