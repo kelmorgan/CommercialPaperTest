@@ -838,12 +838,13 @@ public class Shared implements Constants {
         return empty;
     }
     public void cpSelectTerminationType (IFormReference ifr){
-        if (getCpTerminationType(ifr).equalsIgnoreCase(cpTerminationTypeFull)){
+        if (isCpTerminateType(ifr,cpTerminationTypeFull)){
             setVisible(ifr, new String[]{cpTermSpecialRateLocal,cpTermCalculateBtn,cpTermAdjustedPrincipalLocal,cpTermAmountDueLocal});
-            setMandatory(ifr, new String[]{cpTermCalculateBtn});
             enableFields(ifr, new String[]{cpTermSpecialRateLocal,cpTermCalculateBtn});
+            setInvisible(ifr, new String[]{cpTermPartialOptionLocal,cpTermPartialAmountLocal});
+            undoMandatory(ifr, new String[]{cpTermPartialOptionLocal,cpTermPartialAmountLocal});
         }
-        else if (getCpTerminationType(ifr).equalsIgnoreCase(cpTerminationTypePartial)){
+        else if (isCpTerminateType(ifr,cpTerminationTypePartial)){
             setVisible(ifr, new String[]{cpTermSpecialRateLocal,cpTermPartialOptionLocal,cpTermPartialAmountLocal,cpTermCalculateBtn,cpTermAdjustedPrincipalLocal,cpTermAmountDueLocal});
             setMandatory(ifr, new String[]{cpTermPartialOptionLocal,cpTermPartialAmountLocal});
             enableFields(ifr, new String[]{cpTermSpecialRateLocal,cpTermPartialOptionLocal,cpTermPartialAmountLocal,cpTermCalculateBtn});
