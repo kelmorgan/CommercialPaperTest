@@ -1,8 +1,10 @@
 package com.cp.worksteps;
 
 import com.cp.utils.*;
+import com.kelmorgan.ibpsformapis.apis.FormApi;
 import com.newgen.iforms.EControl;
 import com.newgen.iforms.FormDef;
+import com.newgen.iforms.custom.IFormAPIHandler;
 import com.newgen.iforms.custom.IFormReference;
 import com.newgen.iforms.custom.IFormServerEventHandler;
 import org.apache.log4j.Logger;
@@ -100,6 +102,7 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
                             }
                             else if (isPrevWsDashboard(ifr)){
                                 setVisible(ifr,new String[]{cpCategoryLocal});
+                                setMandatory(ifr,new String[]{cpCategoryLocal});
                             }
                         }
                     }
@@ -215,6 +218,7 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
             setVisible(ifr, new String[]{cpDecisionSection, cpMarketSection});
             enableFields(ifr, new String[]{cpLandMsgLocal, cpSelectMarketLocal});
             setMandatory(ifr, new String[]{cpSelectMarketLocal, cpDecisionLocal, cpRemarksLocal});
+            FormApi.setDropDown(ifr,cpCategoryLocal,new String[]{cpCategorySetup});
         } else if (getPrevWs(ifr).equalsIgnoreCase(treasuryOfficerVerifier)) {
             if (isEmpty(getWindowSetupFlag(ifr))) {
                 if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)) {
