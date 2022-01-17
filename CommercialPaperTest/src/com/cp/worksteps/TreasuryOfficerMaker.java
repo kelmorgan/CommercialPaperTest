@@ -304,9 +304,16 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
         disableField(ifr, cpCategoryLocal);
         if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)) {
             if (getCpCategory(ifr).equalsIgnoreCase(cpCategorySetup)) {
-                setVisible(ifr, new String[]{cpTreasuryPriSection, cpPmIssuerSection, cpSetupSection, cpSetupWindowBtn, cpCutOffTimeSection, cpPmIssuerSection});
-                setMandatory(ifr, new String[]{cpOpenDateLocal, cpPmMinPriAmtLocal, cpCloseDateLocal, cpPmIssuerNameLocal});
-                enableFields(ifr, new String[]{cpPmMinPriAmtLocal, cpCloseDateLocal, cpSetupWindowBtn, cpPmIssuerNameLocal});
+                if (isPrevWsDashboard(ifr)){
+                    setVisible(ifr, new String[]{cpLandingMsgSection});
+                    enableFields(ifr,new String[]{cpLandMsgLocal});
+                    setMandatory(ifr,new String [] {cpLandMsgLocal});
+                }
+                else {
+                    setVisible(ifr, new String[]{cpTreasuryPriSection, cpPmIssuerSection, cpSetupSection, cpSetupWindowBtn, cpCutOffTimeSection, cpPmIssuerSection});
+                    setMandatory(ifr, new String[]{cpOpenDateLocal, cpPmMinPriAmtLocal, cpCloseDateLocal, cpPmIssuerNameLocal});
+                    enableFields(ifr, new String[]{cpPmMinPriAmtLocal, cpCloseDateLocal, cpSetupWindowBtn, cpPmIssuerNameLocal});
+                }
             } else if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryModifyCutOffTime)) {
                 setVisible(ifr, new String[]{cpCutOffTimeSection});
                 enableFields(ifr, new String[]{cpCloseDateLocal});
