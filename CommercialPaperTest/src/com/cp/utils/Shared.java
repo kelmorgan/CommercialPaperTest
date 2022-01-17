@@ -528,9 +528,13 @@ public class Shared implements Constants {
         return getFieldValue(ifr,cpPmSettlementDateLocal);
     }
     public static void isPbSol(IFormReference ifr, String sol){
-        int isPbSol = Integer.parseInt(new DbConnect(ifr,Query.getPBSolQuery(sol)).getData().get(0).get(0));
-        if (isPbSol > 0)
-            setFields(ifr,pbFlagLocal,flag);
+        try {
+            int isPbSol = Integer.parseInt(new DbConnect(ifr, Query.getPBSolQuery(sol)).getData().get(0).get(0));
+            if (isPbSol > 0)
+                setFields(ifr, pbFlagLocal, flag);
+        } catch (Exception e){
+            logger.info("sol: "+ sol +"  not a private banking sol");
+        }
     }
     public static String getPbFlag(IFormReference ifr){
         return getFieldValue(ifr,pbFlagLocal);

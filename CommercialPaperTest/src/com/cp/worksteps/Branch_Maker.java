@@ -214,18 +214,17 @@ public class Branch_Maker extends Shared implements IFormServerEventHandler, Sha
             hideCpSections(ifr);
             hideShowLandingMessageLabel(ifr, False);
             hideShowBackToDashboard(ifr, False);
-            setBranchDetails(ifr);
-            isPbSol(ifr, getSol(ifr));
             hideCpSections(ifr);
             hideShowLandingMessageLabel(ifr, False);
             hideShowBackToDashboard(ifr, False);
             clearFields(ifr, new String[]{cpRemarksLocal, cpDecisionLocal});
-
             cpSetDecision(ifr);
             setVisible(ifr, new String[]{cpDecisionSection, cpMarketSection});
             enableFields(ifr, new String[]{cpSelectMarketLocal});
             setMandatory(ifr, new String[]{cpSelectMarketLocal, cpDecisionLocal, cpRemarksLocal});
             setDropDown(ifr, cpCategoryLocal, new String[]{cpCategoryBid, cpCategoryMandate});
+            setBranchDetails(ifr);
+            isPbSol(ifr, getSol(ifr));
         } catch (Exception e){
             logger.info("Exception occurred in branch_maker formload: "+ e.getMessage());
         }
