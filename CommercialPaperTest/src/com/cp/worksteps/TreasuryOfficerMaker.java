@@ -98,6 +98,9 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
                                 disableFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
                                 return windowActiveErrMessage;
                             }
+                            else if (isPrevWsDashboard(ifr)){
+                                setVisible(ifr,new String[]{cpCategoryLocal});
+                            }
                         }
                     }
                 }
