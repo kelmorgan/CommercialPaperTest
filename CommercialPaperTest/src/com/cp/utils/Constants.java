@@ -60,6 +60,7 @@ public interface Constants {
 	String utilityFlagLocal = "cp_utilityFlag";
 	String downloadFlagLocal ="downloadFlag";
 	String branchNameLocal = "g_branchName";
+	String dashBoardFlagLocal = "DASHBOARDFLAG";
 
 	// cp sections
 	String cpBranchPriSection = "cp_branchPm_section";

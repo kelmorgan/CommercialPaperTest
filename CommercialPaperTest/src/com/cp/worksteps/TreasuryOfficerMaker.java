@@ -93,16 +93,15 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
                             cpSmInvestmentSetup(ifr);
                             break;
                         }
-                        case cpOnSelectMarket:{
-                            if (isCpWindowActive(ifr) && isPrevWsDashboard(ifr)){
+                        case cpOnSelectMarket: {
+                            if (isCpWindowActive(ifr) && isPrevWsDashboard(ifr)) {
                                 disableCpSections(ifr);
-                                setFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal},new String[]{decDiscard,windowActiveErrMessage});
-                                disableFields(ifr,new String[]{cpDecisionLocal,cpRemarksLocal});
+                                setFields(ifr, new String[]{cpDecisionLocal, cpRemarksLocal}, new String[]{decDiscard, windowActiveErrMessage});
+                                disableFields(ifr, new String[]{cpDecisionLocal, cpRemarksLocal});
                                 return windowActiveErrMessage;
-                            }
-                            else if (isPrevWsDashboard(ifr)){
-                                setVisible(ifr,new String[]{cpCategoryLocal});
-                                setMandatory(ifr,new String[]{cpCategoryLocal});
+                            } else if (isPrevWsDashboard(ifr)) {
+                                setVisible(ifr, new String[]{cpCategoryLocal});
+                                setMandatory(ifr, new String[]{cpCategoryLocal});
                             }
                         }
                     }
@@ -218,7 +217,7 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
             setVisible(ifr, new String[]{cpDecisionSection, cpMarketSection});
             enableFields(ifr, new String[]{cpLandMsgLocal, cpSelectMarketLocal});
             setMandatory(ifr, new String[]{cpSelectMarketLocal, cpDecisionLocal, cpRemarksLocal});
-            FormApi.setDropDown(ifr,cpCategoryLocal,new String[]{cpCategorySetup});
+            FormApi.setDropDown(ifr, cpCategoryLocal, new String[]{cpCategorySetup});
         } else if (getPrevWs(ifr).equalsIgnoreCase(treasuryOfficerVerifier)) {
             if (isEmpty(getWindowSetupFlag(ifr))) {
                 if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)) {
@@ -311,12 +310,11 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
         disableField(ifr, cpCategoryLocal);
         if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)) {
             if (getCpCategory(ifr).equalsIgnoreCase(cpCategorySetup)) {
-                if (isPrevWsDashboard(ifr)){
+                if (isPrevWsDashboard(ifr)) {
                     setVisible(ifr, new String[]{cpLandingMsgSection});
-                    enableFields(ifr,new String[]{cpLandMsgLocal});
-                    setMandatory(ifr,new String [] {cpLandMsgLocal});
-                }
-                else {
+                    enableFields(ifr, new String[]{cpLandMsgLocal});
+                    setMandatory(ifr, new String[]{cpLandMsgLocal});
+                } else {
                     setVisible(ifr, new String[]{cpTreasuryPriSection, cpPmIssuerSection, cpSetupSection, cpSetupWindowBtn, cpCutOffTimeSection, cpPmIssuerSection});
                     setMandatory(ifr, new String[]{cpOpenDateLocal, cpPmMinPriAmtLocal, cpCloseDateLocal, cpPmIssuerNameLocal});
                     enableFields(ifr, new String[]{cpPmMinPriAmtLocal, cpCloseDateLocal, cpSetupWindowBtn, cpPmIssuerNameLocal});
@@ -342,11 +340,17 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
             }
         } else if (getCpMarket(ifr).equalsIgnoreCase(cpSecondaryMarket)) {
             if (getCpCategory(ifr).equalsIgnoreCase(cpCategorySetup)) {
-                setVisible(ifr, new String[]{cpTreasurySecSection, cpCutOffTimeSection, cpSmCutOffTimeLocal});
-                setInvisible(ifr, new String[]{cpOpenDateLocal, cpCloseDateLocal});
-                setFields(ifr, new String[]{cpSmCutOffTimeLocal, cpSmMinPrincipalLocal}, new String[]{smDefaultCutOffTime, smMinPrincipal});
-                enableFields(ifr, new String[]{cpSmSetupLocal});
-                setMandatory(ifr, new String[]{cpSmSetupLocal, cpSmMinPrincipalLocal});
+                if (isPrevWsDashboard(ifr)) {
+                    setVisible(ifr, new String[]{cpLandingMsgSection});
+                    enableFields(ifr, new String[]{cpLandMsgLocal});
+                    setMandatory(ifr, new String[]{cpLandMsgLocal});
+                } else {
+                    setVisible(ifr, new String[]{cpTreasurySecSection, cpCutOffTimeSection, cpSmCutOffTimeLocal});
+                    setInvisible(ifr, new String[]{cpOpenDateLocal, cpCloseDateLocal});
+                    setFields(ifr, new String[]{cpSmCutOffTimeLocal, cpSmMinPrincipalLocal}, new String[]{smDefaultCutOffTime, smMinPrincipal});
+                    enableFields(ifr, new String[]{cpSmSetupLocal});
+                    setMandatory(ifr, new String[]{cpSmSetupLocal, cpSmMinPrincipalLocal});
+                }
             } else if (getCpCategory(ifr).equalsIgnoreCase(cpCategoryModifyCutOffTime)) {
                 setVisible(ifr, new String[]{cpCutOffTimeSection});
                 enableFields(ifr, new String[]{cpCloseDateLocal});

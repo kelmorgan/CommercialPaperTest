@@ -3,6 +3,7 @@ package com.cp.utils;
 import com.kelmorgan.ibpservices.initializer.IBPSServiceHandler;
 import com.kelmorgan.ibpservices.initializer.ServiceInitializer;
 import com.kelmorgan.ibpservices.initializer.ServiceInjector;
+import com.kelmorgan.ibpsformapis.apis.FormApi;
 import com.newgen.iforms.custom.IFormReference;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -1019,5 +1020,11 @@ public class Shared implements Constants {
     }
     public static boolean isPrevWsDashboard (IFormReference ifr){
         return getPrevWs(ifr).equalsIgnoreCase(dashBoardWs);
+    }
+    public static String getDashboardFlag(IFormReference ifr){
+        return FormApi.getFieldValue(ifr, dashBoardFlagLocal);
+    }
+    public static boolean isDashboardFlagSet(IFormReference ifr){
+        return getDashboardFlag(ifr).equalsIgnoreCase(flag);
     }
 }

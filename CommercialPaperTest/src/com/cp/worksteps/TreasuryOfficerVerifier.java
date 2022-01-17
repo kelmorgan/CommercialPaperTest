@@ -148,10 +148,17 @@ public class TreasuryOfficerVerifier extends Shared implements IFormServerEventH
                     setMandatory(ifr,new String[] {cpDecisionLocal,cpRemarksLocal});
                 }
                 else if (isCpSecondaryMarket(ifr)){
-                    setVisible(ifr, new String[]{cpLandingMsgSection,cpDecisionSection,cpMarketSection,cpTreasurySecSection,cpCutOffTimeSection,cpSmCutOffTimeLocal,cpSetupSection,cpSetupWindowBtn,cpSmCpBidTbl});
-                    setInvisible(ifr,new String[]{cpOpenDateLocal,cpCloseDateLocal});
-                    setMandatory(ifr,new String[] {cpDecisionLocal,cpRemarksLocal});
-                    disableFields(ifr,new String[]{cpSmCpBidTbl,cpSmMinPrincipalLocal});
+                    if (isDashboardFlagSet(ifr)){
+                        setVisible(ifr, new String[]{cpLandingMsgSection, cpDecisionSection, cpMarketSection,cpCategoryLocal});
+                        disableFields(ifr, new String[]{cpCategoryLocal});
+                        setMandatory(ifr,new String[] {cpDecisionLocal,cpRemarksLocal});
+                    }
+                    else {
+                        setVisible(ifr, new String[]{cpLandingMsgSection, cpDecisionSection, cpMarketSection, cpTreasurySecSection, cpCutOffTimeSection, cpSmCutOffTimeLocal, cpSetupSection, cpSetupWindowBtn, cpSmCpBidTbl});
+                        setInvisible(ifr, new String[]{cpOpenDateLocal, cpCloseDateLocal});
+                        setMandatory(ifr, new String[]{cpDecisionLocal, cpRemarksLocal});
+                        disableFields(ifr, new String[]{cpSmCpBidTbl, cpSmMinPrincipalLocal});
+                    }
                 }
             }
             else {
