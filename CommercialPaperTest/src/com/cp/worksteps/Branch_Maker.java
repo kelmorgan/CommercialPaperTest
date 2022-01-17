@@ -17,14 +17,14 @@ public class Branch_Maker extends Shared implements IFormServerEventHandler, Sha
     private static final Logger logger = LogGenerator.getLoggerInstance(Branch_Maker.class);
     @Override
     public void beforeFormLoad(FormDef formDef, IFormReference ifr) {
-        clearDecHisFlag(ifr);
+        logger.info("-------Form load branch maker---");
         if (!isEmpty(getProcess(ifr))) showSelectedProcessSheet(ifr);
         if (isCpProcess(ifr)) cpFormLoadActivity(ifr);
     }
 
     @Override
     public String setMaskedValue(String s, String s1) {
-        return null;
+        return s1;
     }
 
     @Override
@@ -210,21 +210,25 @@ public class Branch_Maker extends Shared implements IFormServerEventHandler, Sha
 
     @Override
     public void cpFormLoadActivity(IFormReference ifr) {
-        hideCpSections(ifr);
-        hideShowLandingMessageLabel(ifr,False);
-        hideShowBackToDashboard(ifr,False);
-        setBranchDetails(ifr);
-        isPbSol(ifr,getSol(ifr));
-        hideCpSections(ifr);
-        hideShowLandingMessageLabel(ifr,False);
-        hideShowBackToDashboard(ifr,False);
-        clearFields(ifr,new String[]{cpRemarksLocal,cpDecisionLocal});
+        try {
+            hideCpSections(ifr);
+            hideShowLandingMessageLabel(ifr, False);
+            hideShowBackToDashboard(ifr, False);
+            setBranchDetails(ifr);
+            isPbSol(ifr, getSol(ifr));
+            hideCpSections(ifr);
+            hideShowLandingMessageLabel(ifr, False);
+            hideShowBackToDashboard(ifr, False);
+            clearFields(ifr, new String[]{cpRemarksLocal, cpDecisionLocal});
 
-        cpSetDecision(ifr);
-        setVisible(ifr, new String[]{cpDecisionSection, cpMarketSection});
-        enableFields(ifr, new String[]{cpSelectMarketLocal});
-        setMandatory(ifr, new String[]{cpSelectMarketLocal, cpDecisionLocal, cpRemarksLocal});
-        setDropDown(ifr, cpCategoryLocal, new String[]{cpCategoryBid, cpCategoryMandate});
+            cpSetDecision(ifr);
+            setVisible(ifr, new String[]{cpDecisionSection, cpMarketSection});
+            enableFields(ifr, new String[]{cpSelectMarketLocal});
+            setMandatory(ifr, new String[]{cpSelectMarketLocal, cpDecisionLocal, cpRemarksLocal});
+            setDropDown(ifr, cpCategoryLocal, new String[]{cpCategoryBid, cpCategoryMandate});
+        } catch (Exception e){
+            logger.info("Exception occurred in branch_maker formload: "+ e.getMessage());
+        }
     }
 
     @Override
