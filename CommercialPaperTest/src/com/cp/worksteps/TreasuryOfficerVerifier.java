@@ -144,6 +144,7 @@ public class TreasuryOfficerVerifier extends Shared implements IFormServerEventH
             if (isEmpty(getWindowSetupFlag(ifr))){
                 if (isCpPrimaryMarket(ifr)){
                     setVisible(ifr, new String[]{cpLandingMsgSection, cpDecisionSection, cpMarketSection,cpCategoryLocal});
+                    disableFields(ifr, new String[]{cpCategoryLocal});
                     setMandatory(ifr,new String[] {cpDecisionLocal,cpRemarksLocal});
                 }
                 else if (isCpSecondaryMarket(ifr)){
