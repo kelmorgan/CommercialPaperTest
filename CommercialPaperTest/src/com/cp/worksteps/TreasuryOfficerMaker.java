@@ -235,6 +235,7 @@ public class TreasuryOfficerMaker extends Shared implements IFormServerEventHand
                     }
                 } else if (getCpMarket(ifr).equalsIgnoreCase(cpSecondaryMarket)) {
                     if (getCpDecision(ifr).equalsIgnoreCase(decApprove)) {
+                        clearDashboardFlag(ifr);
                         setVisible(ifr, new String[]{cpLandingMsgSection, cpMarketSection, cpCategoryLocal, cpDecisionSection});
                         enableFields(ifr, new String[]{cpDecisionSection, cpCategoryLocal});
                         disableFields(ifr, new String[]{cpSelectMarketLocal, cpLandingMsgSection});

@@ -1027,4 +1027,7 @@ public class Shared implements Constants {
     public static boolean isDashboardFlagSet(IFormReference ifr){
         return getDashboardFlag(ifr).equalsIgnoreCase(flag);
     }
+    public static void clearDashboardFlag(IFormReference ifr){
+        FormApi.clearFields(ifr,dashBoardFlagLocal);
+    }
 }
