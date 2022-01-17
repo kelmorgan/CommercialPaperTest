@@ -1013,4 +1013,7 @@ public class Shared implements Constants {
     public static boolean isNotEmpty(List<List<String>> resultSet){
         return !isEmpty(resultSet);
     }
+    public static boolean isPrevWsDashboard (IFormReference ifr){
+        return getPrevWs(ifr).equalsIgnoreCase(dashBoardWs);
+    }
 }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class TreasuryOfficerInitiator extends Shared implements IFormServerEventHandler, SharedI {
-    private Logger logger = LogGenerator.getLoggerInstance(TreasuryOfficerInitiator.class);
+    private final Logger logger = LogGenerator.getLoggerInstance(TreasuryOfficerInitiator.class);
 
     @Override
     public void beforeFormLoad(FormDef formDef, IFormReference ifr) {
