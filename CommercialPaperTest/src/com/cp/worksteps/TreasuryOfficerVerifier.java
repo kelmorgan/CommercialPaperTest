@@ -142,11 +142,11 @@ public class TreasuryOfficerVerifier extends Shared implements IFormServerEventH
         }
         else if (getPrevWs(ifr).equalsIgnoreCase(treasuryOfficerMaker)){
             if (isEmpty(getWindowSetupFlag(ifr))){
-                if (getCpMarket(ifr).equalsIgnoreCase(cpPrimaryMarket)){
-                    setVisible(ifr, new String[]{cpLandingMsgSection, cpDecisionSection, cpMarketSection});
+                if (isCpPrimaryMarket(ifr)){
+                    setVisible(ifr, new String[]{cpLandingMsgSection, cpDecisionSection, cpMarketSection,cpCategoryLocal});
                     setMandatory(ifr,new String[] {cpDecisionLocal,cpRemarksLocal});
                 }
-                else if (getCpMarket(ifr).equalsIgnoreCase(cpSecondaryMarket)){
+                else if (isCpSecondaryMarket(ifr)){
                     setVisible(ifr, new String[]{cpLandingMsgSection,cpDecisionSection,cpMarketSection,cpTreasurySecSection,cpCutOffTimeSection,cpSmCutOffTimeLocal,cpSetupSection,cpSetupWindowBtn,cpSmCpBidTbl});
                     setInvisible(ifr,new String[]{cpOpenDateLocal,cpCloseDateLocal});
                     setMandatory(ifr,new String[] {cpDecisionLocal,cpRemarksLocal});
