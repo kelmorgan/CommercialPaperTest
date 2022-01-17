@@ -53,6 +53,10 @@ IFormReference ifr;
 					objActivity = new TreasuryOpsMatureOnMaturity();
 					break;
 				}
+				case branchMakerWs:{
+					objActivity = new Branch_Maker();
+					break;
+				}
 				case branchException:{
 					objActivity = new BranchException();
 					break;

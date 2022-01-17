@@ -1,6 +1,8 @@
 package com.cp.utils;
 
-import com.fbn.service.Service;
+import com.kelmorgan.ibpservices.initializer.IBPSServiceHandler;
+import com.kelmorgan.ibpservices.initializer.ServiceInitializer;
+import com.kelmorgan.ibpservices.initializer.ServiceInjector;
 import com.newgen.iforms.custom.IFormReference;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -876,7 +878,7 @@ public class Shared implements Constants {
     public static void cpTerminateBid(IFormReference ifr){
         if (isCpTerminateType(ifr,cpTerminationTypeFull)){
             new DbConnect(ifr,Query.getCpTerminateBid(getCpTermCusId(ifr))).saveQuery();
-            routeFullTerminatedBids(ifr,initializeService(configPath));
+            routeFullTerminatedBids(ifr,initializedService());
         }
         else if (isCpTerminateType(ifr,cpTerminationTypePartial)){
             new DbConnect(ifr,Query.getCpPartialTerminateBid(getCpTermCusId(ifr),getCpAdjustedPrincipal(ifr))).saveQuery();
@@ -887,18 +889,15 @@ public class Shared implements Constants {
         return getFieldValue(ifr,cpTermAdjustedPrincipalLocal);
     }
 
-    public static Service initializeService(String configPath){
-        Service.setConfigPath(configPath);
-        return new Service(Service.getSessionId());
+    private static IBPSServiceHandler initializedService() {
+        ServiceInjector serviceInjector = new ServiceInitializer();
+        return serviceInjector.getService(Constants.configPath);
     }
-    public static Service initializeService(String configPath, String userName, String passWord){
-        Service.setConfigPath(configPath);
-        return new Service(Service.getSessionId(userName,passWord));
-    }
+
     public static String getDataByCoordinates(List<List<String>> resultSet, int row, int column){
        return  resultSet.get(row).get(column);
     }
-    public static void routeFullTerminatedBids(IFormReference ifr, Service service){
+    public static void routeFullTerminatedBids(IFormReference ifr, IBPSServiceHandler service){
         String wiName = getDataByCoordinates(new DbConnect(ifr,Query.getBidWiNameForTermination(getCpTermCusId(ifr))).getData(),0,0) ;
         String column = "terminateflag";
         String condition = "winame = '"+wiName+"'";

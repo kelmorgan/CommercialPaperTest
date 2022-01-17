@@ -13,6 +13,7 @@ public interface Constants {
 	String awaitingMaturityUtility = "AwaitingMaturity_Utility";
 	String treasuryOpsMatureOnMaturity = "TreasuryOps_Mature_on_maturity";
 	String branchInitiator = "Branch_Initiator";
+	String branchMakerWs = "Branch_Maker";
 	String branchVerifier = "Branch_Verifier";
 	String branchException = "Branch_Exception";
 	String rpcVerifier = "RPC_Verifier";
