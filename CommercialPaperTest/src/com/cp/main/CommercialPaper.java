@@ -3,11 +3,8 @@ package com.cp.main;
 import com.cp.utils.Constants;
 import com.cp.utils.LogGenerator;
 import com.cp.worksteps.*;
-import com.initiator.worksteps.BranchInitiator;
-import com.initiator.worksteps.TreasuryOfficerInitiator;
 import com.newgen.iforms.custom.IFormReference;
 import com.newgen.iforms.custom.IFormServerEventHandler;
-
 import org.apache.log4j.Logger;
 
 public class CommercialPaper implements  Constants {
@@ -24,10 +21,6 @@ private final IFormReference ifr;
 		logger.info("activityName in cp jar: "+activityName);
 		try {
 			switch (activityName){
-				case treasuryOfficerInitiator:{
-					objActivity = new TreasuryOfficerInitiator();
-					break;
-				}
 				case treasuryOfficerMaker:{
 					objActivity = new TreasuryOfficerMaker();
 					break;
@@ -59,10 +52,6 @@ private final IFormReference ifr;
 				}
 				case branchException:{
 					objActivity = new BranchException();
-					break;
-				}
-				case branchInitiator:{
-					objActivity = new BranchInitiator();
 					break;
 				}
 				case branchVerifier:{
