@@ -5,11 +5,11 @@ import com.newgen.iforms.custom.IFormReference;
 import org.apache.log4j.Logger;
 
 public class MailSetup {
-    private static Logger logger = LogGenerator.getLoggerInstance(MailSetup.class);
-    private String wiName;
-    private String sendMail;
-    private String copyMail;
-    private String mailSubject;
+    private static final Logger logger = LogGenerator.getLoggerInstance(MailSetup.class);
+    private final String wiName;
+    private final String sendMail;
+    private final String copyMail;
+    private final String mailSubject;
     private String mailMessage;
 
     public MailSetup (IFormReference ifr, String wiName, String sendMail, String copyMail,String mailSubject, String mailMessage){
