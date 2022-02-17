@@ -11,8 +11,8 @@ import com.newgen.iforms.custom.IFormServerEventHandler;
 import org.apache.log4j.Logger;
 
 public class CommercialPaper implements  Constants {
-private Logger logger = LogGenerator.getLoggerInstance(CommercialPaper.class);
-IFormReference ifr;
+private final Logger logger = LogGenerator.getLoggerInstance(CommercialPaper.class);
+private final IFormReference ifr;
 
 	public CommercialPaper(IFormReference ifr) {
 		this.ifr = ifr;
