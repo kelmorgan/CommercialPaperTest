@@ -5,7 +5,7 @@ import java.io.File;
 public interface Constants {
 	String ProcessName = "MoneyMarketW";
 	//WorkSteps
-	String dashBoardWs = "Dashboard";
+	String dashBoardWs = "Initiator";
 	String treasuryOfficerInitiator = "Treasury_Officer_Initiator";
 	String treasuryOfficerVerifier = "Treasury_Officer_Verifier";
 	String treasuryOfficerMaker = "Treasury_Officer_Maker";
